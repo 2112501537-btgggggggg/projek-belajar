@@ -1,5 +1,5 @@
 import { Elysia, t } from "elysia";
-import { registerUser, loginUser } from "../services/user-services";
+import { registerUser, loginUser, getCurrentUser } from "../services/user-services";
 
 export const userRoutes = new Elysia({ prefix: "/api/users" })
   .post("/", async ({ body, set }) => {
@@ -42,4 +42,26 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
       email: t.String(),
       password: t.String()
     })
+  })
+  .get("/current", async ({ headers, set }) => {
+    try {
+      const authHeader = headers["authorization"];
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        set.status = 401;
+        return { error: "Unauthorized" };
+      }
+
+      const token = authHeader.substring(7);
+      const result = await getCurrentUser(token);
+
+      if (!result.success) {
+        set.status = 401;
+        return { error: result.error };
+      }
+
+      return { data: result.data };
+    } catch (error: any) {
+      set.status = 500;
+      return { error: error.message };
+    }
   });
