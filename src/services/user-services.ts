@@ -3,7 +3,18 @@ import { db } from "../db";
 import { users, session } from "../db/schema";
 import * as bcrypt from "bcrypt";
 
-export async function registerUser(data: any) {
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export async function registerUser(data: RegisterPayload) {
   const { name, email, password } = data;
 
   // Cek apakah email sudah ada
@@ -29,7 +40,7 @@ export async function registerUser(data: any) {
   return { success: true, data: "OK" };
 }
 
-export async function loginUser(data: any) {
+export async function loginUser(data: LoginPayload) {
   const { email, password } = data;
 
   // Cari user berdasarkan email
@@ -88,15 +99,11 @@ export async function getCurrentUser(token: string) {
 }
 
 export async function logoutUser(token: string) {
-  const sessionData = await db.query.session.findFirst({
-    where: eq(session.token, token),
-  });
+  const [result] = await db.delete(session).where(eq(session.token, token));
 
-  if (!sessionData) {
+  if (result.affectedRows === 0) {
     return { success: false, error: "Unauthorized" };
   }
-
-  await db.delete(session).where(eq(session.token, token));
 
   return { success: true, data: "Ok" };
 }

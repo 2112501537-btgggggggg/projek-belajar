@@ -43,15 +43,21 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
       password: t.String()
     })
   })
-  .get("/current", async ({ headers, set }) => {
+  .derive(({ headers }) => {
+    const authHeader = headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return { token: null };
+    }
+    const token = authHeader.substring(7).trim();
+    return { token: token || null };
+  })
+  .get("/current", async ({ token, set }) => {
     try {
-      const authHeader = headers["authorization"];
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      if (!token) {
         set.status = 401;
         return { error: "Unauthorized" };
       }
 
-      const token = authHeader.substring(7);
       const result = await getCurrentUser(token);
 
       if (!result.success) {
@@ -65,15 +71,13 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
       return { error: error.message };
     }
   })
-  .delete("/logout", async ({ headers, set }) => {
+  .delete("/logout", async ({ token, set }) => {
     try {
-      const authHeader = headers["authorization"];
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      if (!token) {
         set.status = 401;
         return { error: "Unauthorized" };
       }
 
-      const token = authHeader.substring(7);
       const result = await logoutUser(token);
 
       if (!result.success) {
