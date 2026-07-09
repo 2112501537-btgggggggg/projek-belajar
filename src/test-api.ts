@@ -94,6 +94,39 @@ async function runTests() {
     console.log("Status HTTP:", response.status);
     console.log("Response Body:", result);
 
+    console.log("\n8. Test Logout (Berhasil)");
+    response = await fetch("http://localhost:3001/api/users/logout", {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n9. Test Get Current User Setelah Logout (Gagal)");
+    response = await fetch("http://localhost:3001/api/users/current", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n10. Test Logout Token Palsu (Gagal)");
+    response = await fetch("http://localhost:3001/api/users/logout", {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer token-palsu`
+      }
+    });
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
   } catch (error) {
     console.error("Test Error:", error);
   } finally {
