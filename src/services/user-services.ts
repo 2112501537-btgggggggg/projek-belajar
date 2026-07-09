@@ -87,3 +87,17 @@ export async function getCurrentUser(token: string) {
   };
 }
 
+export async function logoutUser(token: string) {
+  const sessionData = await db.query.session.findFirst({
+    where: eq(session.token, token),
+  });
+
+  if (!sessionData) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  await db.delete(session).where(eq(session.token, token));
+
+  return { success: true, data: "Ok" };
+}
+
