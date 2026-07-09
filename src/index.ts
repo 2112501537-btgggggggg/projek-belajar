@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { swagger } from "@elysiajs/swagger";
-import { userRoutes } from "./routes/users";
+import { userRoutes } from "./routes/user-routes";
 
 const port = Bun.env.PORT || 3000;
 
