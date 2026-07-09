@@ -48,6 +48,7 @@ async function runTests() {
     result = await response.json();
     console.log("Status HTTP:", response.status);
     console.log("Response Body:", result);
+    const token = result.data;
 
     console.log("\n4. Test Login Password Salah (Gagal)");
     response = await fetch("http://localhost:3001/api/users/login", {
@@ -59,6 +60,36 @@ async function runTests() {
       })
     });
     
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n5. Test Get Current User (Berhasil)");
+    response = await fetch("http://localhost:3001/api/users/current", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n6. Test Get Current User Token Salah (Gagal)");
+    response = await fetch("http://localhost:3001/api/users/current", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer token-palsu`
+      }
+    });
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n7. Test Get Current User Tanpa Header Authorization (Gagal)");
+    response = await fetch("http://localhost:3001/api/users/current", {
+      method: "GET"
+    });
     result = await response.json();
     console.log("Status HTTP:", response.status);
     console.log("Response Body:", result);
