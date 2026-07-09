@@ -35,6 +35,34 @@ async function runTests() {
     console.log("Status HTTP:", response.status);
     console.log("Response Body:", result);
 
+    console.log("\n3. Test Login (Berhasil)");
+    response = await fetch("http://localhost:3001/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "eko@localhost",
+        password: "rahasia"
+      })
+    });
+    
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
+    console.log("\n4. Test Login Password Salah (Gagal)");
+    response = await fetch("http://localhost:3001/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "eko@localhost",
+        password: "salah"
+      })
+    });
+    
+    result = await response.json();
+    console.log("Status HTTP:", response.status);
+    console.log("Response Body:", result);
+
   } catch (error) {
     console.error("Test Error:", error);
   } finally {
