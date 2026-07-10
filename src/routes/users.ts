@@ -23,6 +23,7 @@ export const userRoutes = new Elysia({ prefix: "/users" })
     body: t.Object({
       name: t.String(),
       email: t.String(),
+      password: t.String(),
     })
   })
   .get("/:id", async ({ params: { id } }) => {
