@@ -12,6 +12,16 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       return { success: false, error: error.message };
     }
   }, {
+    response: t.Object({
+      success: t.Boolean(),
+      data: t.Optional(t.Array(t.Object({
+        id: t.Number(),
+        name: t.String(),
+        email: t.String(),
+        createdAt: t.Any()
+      }))),
+      error: t.Optional(t.String())
+    }, { description: "Returns status and optional user list or error message" }),
     detail: {
       tags: ["User Management"],
       summary: "Get all users",
@@ -31,6 +41,11 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       email: t.String(),
       password: t.String(),
     }),
+    response: t.Object({
+      success: t.Boolean(),
+      message: t.Optional(t.String()),
+      error: t.Optional(t.String())
+    }, { description: "Returns success status and message or error" }),
     detail: {
       tags: ["User Management"],
       summary: "Create a user",
@@ -57,6 +72,16 @@ export const userRoutes = new Elysia({ prefix: "/users" })
     params: t.Object({
       id: t.String({ description: "Numeric ID of the user" })
     }),
+    response: t.Object({
+      success: t.Boolean(),
+      data: t.Optional(t.Object({
+        id: t.Number(),
+        name: t.String(),
+        email: t.String(),
+        createdAt: t.Any()
+      })),
+      error: t.Optional(t.String())
+    }, { description: "Returns success status and optional user details or error" }),
     detail: {
       tags: ["User Management"],
       summary: "Get user by ID",
@@ -82,6 +107,11 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       name: t.Optional(t.String()),
       email: t.Optional(t.String()),
     }),
+    response: t.Object({
+      success: t.Boolean(),
+      message: t.Optional(t.String()),
+      error: t.Optional(t.String())
+    }, { description: "Returns success status and update status message or error" }),
     detail: {
       tags: ["User Management"],
       summary: "Update user by ID",
@@ -103,6 +133,11 @@ export const userRoutes = new Elysia({ prefix: "/users" })
     params: t.Object({
       id: t.String({ description: "Numeric ID of the user to delete" })
     }),
+    response: t.Object({
+      success: t.Boolean(),
+      message: t.Optional(t.String()),
+      error: t.Optional(t.String())
+    }, { description: "Returns success status and deletion message or error" }),
     detail: {
       tags: ["User Management"],
       summary: "Delete user by ID",
