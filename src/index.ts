@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { swagger } from "@elysiajs/swagger";
-import { userRoutes } from "./routes/user-routes";
+import { userRoutes as authRoutes } from "./routes/user-routes";
+import { userRoutes as crudRoutes } from "./routes/users";
 
 const port = Bun.env.PORT || 3000;
 
@@ -14,7 +15,8 @@ const app = new Elysia()
       },
     },
   }))
-  .use(userRoutes)
+  .use(authRoutes)
+  .use(crudRoutes)
   .get("/", () => ({ message: "Welcome to ElysiaJS backend with Drizzle and MySQL!" }))
   .listen(port);
 

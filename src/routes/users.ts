@@ -11,6 +11,12 @@ export const userRoutes = new Elysia({ prefix: "/users" })
     } catch (error: any) {
       return { success: false, error: error.message };
     }
+  }, {
+    detail: {
+      tags: ["User Management"],
+      summary: "Get all users",
+      description: "Retrieves a list of all registered users in the system."
+    }
   })
   .post("/", async ({ body }) => {
     try {
@@ -24,7 +30,12 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       name: t.String(),
       email: t.String(),
       password: t.String(),
-    })
+    }),
+    detail: {
+      tags: ["User Management"],
+      summary: "Create a user",
+      description: "Creates a new user directly in the database (admin operation)."
+    }
   })
   .get("/:id", async ({ params: { id } }) => {
     try {
@@ -42,6 +53,15 @@ export const userRoutes = new Elysia({ prefix: "/users" })
     } catch (error: any) {
       return { success: false, error: error.message };
     }
+  }, {
+    params: t.Object({
+      id: t.String({ description: "Numeric ID of the user" })
+    }),
+    detail: {
+      tags: ["User Management"],
+      summary: "Get user by ID",
+      description: "Retrieves the details of a single user by their numeric ID."
+    }
   })
   .put("/:id", async ({ params: { id }, body }) => {
     try {
@@ -55,10 +75,18 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       return { success: false, error: error.message };
     }
   }, {
+    params: t.Object({
+      id: t.String({ description: "Numeric ID of the user to update" })
+    }),
     body: t.Object({
       name: t.Optional(t.String()),
       email: t.Optional(t.String()),
-    })
+    }),
+    detail: {
+      tags: ["User Management"],
+      summary: "Update user by ID",
+      description: "Updates details of a single user by their numeric ID."
+    }
   })
   .delete("/:id", async ({ params: { id } }) => {
     try {
@@ -70,5 +98,14 @@ export const userRoutes = new Elysia({ prefix: "/users" })
       return { success: true, message: "User deleted successfully" };
     } catch (error: any) {
       return { success: false, error: error.message };
+    }
+  }, {
+    params: t.Object({
+      id: t.String({ description: "Numeric ID of the user to delete" })
+    }),
+    detail: {
+      tags: ["User Management"],
+      summary: "Delete user by ID",
+      description: "Deletes a single user from the database by their numeric ID."
     }
   });
